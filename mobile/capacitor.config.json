@@ -1,0 +1,16 @@
+{
+  "appId": "ru.kazankagang.rekuperator",
+  "appName": "Рекуператор",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": true
+  },
+  "server": {
+    "cleartext": true
+  },
+  "plugins": {
+    "SystemBars": {
+      "initialViewportFitValueHint": "cover"
+    }
+  }
+}

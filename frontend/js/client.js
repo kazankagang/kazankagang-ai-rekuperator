@@ -1,5 +1,5 @@
 // Клиентская часть: выписка, найденные случаи, претензия и согласие.
-import { api } from "./api.js";
+import { api, conn, setServer } from "./api.js";
 import { esc, fmtDate, pluralCases, rub } from "./format.js";
 
 export const COMMISSION = 0.2;
@@ -209,6 +209,26 @@ async function loadDemo() {
   }
 }
 
+// Android-приложение: выбор адреса бэкенда и пометка офлайн-режима.
+function initServer(serverError) {
+  const btn = $("btn-server");
+  btn.hidden = false;
+  btn.addEventListener("click", () => {
+    const url = window.prompt("Адрес сервера Рекуператора, например http://192.168.1.10:8000. Пусто: офлайн-демо.", conn.base);
+    if (url === null) return;
+    setServer(url);
+    location.reload();
+  });
+  const note = $("conn-note");
+  if (conn.offline) {
+    note.textContent = (serverError ? `${serverError} ` : "") +
+      "Офлайн-режим: демо-выписка и претензии встроены в приложение. Чтобы загрузить свою выписку и включить ИИ, нажмите «Сервер».";
+  } else {
+    note.textContent = `Подключено к серверу ${conn.base}.`;
+  }
+  note.hidden = false;
+}
+
 export async function initClient() {
   $("file").addEventListener("change", async (ev) => {
     const f = ev.target.files && ev.target.files[0];
@@ -223,11 +243,13 @@ export async function initClient() {
   $("btn-demo").addEventListener("click", loadDemo);
   $("btn-ai").addEventListener("click", aiScan);
 
+  let serverError = "";
   try {
     const health = await api.health();
     state.aiEnabled = health.ai_enabled;
-  } catch { state.aiEnabled = false; }
+  } catch (e) { state.aiEnabled = false; serverError = e.message; }
   if (!state.aiEnabled) $("btn-ai").title = "Задайте ANTHROPIC_API_KEY на сервере, чтобы включить ИИ";
+  if (conn.native) initServer(serverError);
 
   await loadDemo();
 }

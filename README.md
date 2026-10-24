@@ -33,6 +33,7 @@ frontend/           HTML, CSS, JavaScript (ES-модули, без сборки)
   index.html
   css/              app.css, dashboard.css, landing.css
   js/               main.js, client.js, dashboard.js, api.js, format.js
+mobile/             Android-приложение (Capacitor), см. mobile/README.md
 data/demo_statement.csv
 Dockerfile
 ```
@@ -109,3 +110,8 @@ pytest backend/tests
 - Шанс успеха задан экспертными весами по типу случая. В MVP его заменит модель, обученная на исходах дел пилота.
 - Данные дашборда и демо-выписки вымышлены.
 - Отправка претензии пока только отмечается в интерфейсе.
+
+
+## Android-приложение
+
+Клиентская часть собирается в APK для Android: `mobile/`. Готовый APK выкладывается в релиз `android-latest` после каждой сборки. Как поставить на телефон и подключить к серверу: [mobile/README.md](mobile/README.md).

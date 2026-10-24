@@ -1,0 +1,73 @@
+name: Android APK
+
+on:
+  push:
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - "data/**"
+      - "mobile/**"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: android-apk
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r ../backend/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Собрать веб-часть и Android-проект
+        run: |
+          npm ci
+          npm run build
+          npx cap add android
+          npx capacitor-assets generate --android
+          npx cap sync android
+
+      - name: Собрать APK
+        working-directory: mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../rekuperator.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rekuperator-apk
+          path: mobile/rekuperator.apk
+
+      - name: Выложить APK в релиз android-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-latest --cleanup-tag --yes || true
+          gh release create android-latest rekuperator.apk \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "Рекуператор для Android (свежая сборка)" \
+            --notes "Сборка из ветки ${GITHUB_REF_NAME}, коммит ${GITHUB_SHA::7}. Скачайте rekuperator.apk на телефон и установите."

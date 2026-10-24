@@ -7,6 +7,7 @@ from pathlib import Path
 
 import anthropic
 from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from . import dashboard, llm
@@ -21,6 +22,8 @@ FRONTEND = ROOT / "frontend"
 MAX_UPLOAD = 2 * 1024 * 1024
 
 app = FastAPI(title="AI-Рекуператор", version="0.2.0")
+# Android-приложение открывает страницы со своего адреса (https://localhost) и ходит в API отсюда.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
 def _analyze(text: str, source: str) -> AnalysisResult:

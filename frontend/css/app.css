@@ -34,6 +34,8 @@ body { margin: 0 }
 img { max-width: 100% }
 [hidden] { display: none !important }
 body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5 }
+/* Отступы под системные панели в Android-приложении (edge-to-edge) */
+body { padding-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px)); padding-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)) }
 .wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
 h1, h2, h3 { font-family: var(--display); color: var(--ink); margin: 0; text-wrap: balance; line-height: 1.15 }
 .num { font-variant-numeric: tabular-nums }

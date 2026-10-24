@@ -1,5 +1,5 @@
 // Клиентская часть: выписка, найденные случаи, претензия и согласие.
-import { api } from "./api.js";
+import { api, conn, setServer } from "./api.js";
 import { esc, fmtDate, pluralCases, rub } from "./format.js";
 
 export const COMMISSION = 0.2;
@@ -23,6 +23,7 @@ function showError(msg) {
   const el = $("src-error");
   el.textContent = msg;
   el.hidden = !msg;
+  if (msg) el.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function renderTotals() {
@@ -209,6 +210,26 @@ async function loadDemo() {
   }
 }
 
+// Android-приложение: выбор адреса бэкенда и пометка офлайн-режима.
+function initServer(serverError) {
+  const btn = $("btn-server");
+  btn.hidden = false;
+  btn.addEventListener("click", () => {
+    const url = window.prompt("Адрес сервера Рекуператора, например http://192.168.1.10:8000. Пусто: офлайн-демо.", conn.base);
+    if (url === null) return;
+    setServer(url);
+    location.reload();
+  });
+  const note = $("conn-note");
+  if (conn.offline) {
+    note.textContent = (serverError ? `${serverError} ` : "") +
+      "Офлайн-режим: выписка разбирается прямо на телефоне, претензии собираются по шаблону. Чтобы включить ИИ, нажмите «Сервер».";
+  } else {
+    note.textContent = `Подключено к серверу ${conn.base}.`;
+  }
+  note.hidden = false;
+}
+
 export async function initClient() {
   $("file").addEventListener("change", async (ev) => {
     const f = ev.target.files && ev.target.files[0];
@@ -220,14 +241,18 @@ export async function initClient() {
       showError(e.message);
     }
   });
+  // В Android-приложении фильтр по типу прячет CSV, которые пришли из мессенджеров без MIME-типа.
+  if (conn.native) $("file").removeAttribute("accept");
   $("btn-demo").addEventListener("click", loadDemo);
   $("btn-ai").addEventListener("click", aiScan);
 
+  let serverError = "";
   try {
     const health = await api.health();
     state.aiEnabled = health.ai_enabled;
-  } catch { state.aiEnabled = false; }
+  } catch (e) { state.aiEnabled = false; serverError = e.message; }
   if (!state.aiEnabled) $("btn-ai").title = "Задайте ANTHROPIC_API_KEY на сервере, чтобы включить ИИ";
+  if (conn.native) initServer(serverError);
 
   await loadDemo();
 }

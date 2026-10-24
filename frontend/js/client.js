@@ -28,16 +28,33 @@ function showError(msg) {
 function renderTotals() {
   const sum = state.cases.reduce((s, c) => s + c.amount, 0);
   const n = state.cases.length;
+  const nMl = state.cases.filter((c) => c.ml).length;
   $("t-total").textContent = rub(sum);
   $("t-net").textContent = rub(sum * (1 - COMMISSION));
   $("t-count").textContent = n
-    ? `${n} ${pluralCases(n)} по правилам` + (state.aiCases.length ? ` + ${state.aiCases.length} от ИИ` : "")
+    ? `${n - nMl} ${pluralCases(n - nMl)} по правилам` + (nMl ? ` + ${nMl} от ML` : "") + (state.aiCases.length ? ` + ${state.aiCases.length} от ИИ` : "")
     : "случаев не найдено";
 }
 
 function chanceChip(c) {
-  if (c.ai) return '<span class="chip ai">Найдено ИИ · проверить</span>';
-  return `<span class="chip ${c.chance >= 80 ? "good" : "warn"}">Шанс ${c.chance}%</span>`;
+  const src = c.ai ? '<span class="chip ai">Найдено ИИ · проверить</span>'
+    : c.ml ? `<span class="chip ml" title="Уверенность ML-сканера">Найдено ML · ${Math.round(c.confidence * 100)}%</span>` : "";
+  if (c.ai && c.chance_source !== "ml") return src;
+  const title = c.chance_source === "ml" ? "Оценка модели скоринга" : "Экспертная оценка по типу случая";
+  return `${src}<span class="chip ${c.chance >= 80 ? "good" : "warn"}" title="${title}">Шанс ${c.chance}%</span>`;
+}
+
+function chanceBlock(c) {
+  if (c.ai && c.chance_source !== "ml") return "";
+  const factors = (c.factors || []).map((f) =>
+    `<li><span>${esc(f.label)}</span><b class="num ${f.impact > 0 ? "up" : "down"}">${f.impact > 0 ? "+" : "−"}${Math.abs(f.impact)} п.п.</b></li>`).join("");
+  const note = c.chance_source === "ml"
+    ? `Оценка ML-модели скоринга${c.expert_chance ? `, экспертная оценка по типу случая ${c.expert_chance}%` : ""}.`
+    : "Экспертная оценка по типу случая.";
+  return `<h3 style="margin-top:6px">Вероятность успеха · ${c.chance}%</h3>
+    <div class="meter" role="img" aria-label="Вероятность успеха ${c.chance}%"><div style="width:${c.chance}%"></div></div>
+    <p class="status">${note}</p>
+    ${factors ? `<ul class="factors">${factors}</ul>` : ""}`;
 }
 
 function renderCases() {
@@ -96,7 +113,7 @@ function renderPanel() {
       <div class="block">
         <h3>Правовые основания</h3>
         <ul class="basis">${c.basis.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>
-        ${c.ai ? "" : `<h3 style="margin-top:6px">Вероятность успеха</h3><div class="meter" role="img" aria-label="Вероятность успеха ${c.chance}%"><div style="width:${c.chance}%"></div></div>`}
+        ${chanceBlock(c)}
       </div>
     </div>
     ${ev.length ? `<div class="block"><h3>Операции из выписки</h3><div class="evidence">${ev.map((t) => `<div class="ev"><span>${fmtDate(t.date)} · ${esc(t.desc)}</span><span class="num">${rub(t.amount)}</span></div>`).join("")}</div></div>` : ""}

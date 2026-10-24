@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI-Рекуператор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/landing.css">
+<script type="module" src="js/main.js"></script>
+</head>
+<body>
+<div id="view-home" role="tabpanel" aria-label="Главная">
+  <div class="wrap">
+    <nav class="pm-nav" aria-label="Главное меню">
+      <span class="pm-logo"><i aria-hidden="true"></i>Рекуператор</span>
+      <div class="pm-links">
+        <button class="pm-btn small" type="button" data-go="client">Демо для клиента</button>
+        <button class="pm-btn small" type="button" data-go="bank">Для банка</button>
+      </div>
+    </nav>
+
+    <section class="pm-hero">
+      <div class="pm-copy">
+        <span class="pm-tag">новое в мобильном банке</span>
+        <h1>Банк, который <mark>сам возвращает</mark> тебе деньги</h1>
+        <p>Рейс задержали, подписка тихо продлилась, страховку навязали. Мы находим такие случаи в твоих операциях, пишем претензию и возвращаем деньги на карту.</p>
+        <div class="pm-cta">
+          <button class="pm-btn main" type="button" data-go="client">Найти мои деньги</button>
+          <button class="pm-btn" type="button" data-go="bank">Я из банка</button>
+        </div>
+        <span class="pm-small">Платишь 20% только если деньги вернулись. Не вернули: 0 ₽.</span>
+      </div>
+      <div class="pm-phone" aria-label="Пример экрана приложения">
+        <span class="pm-sticker s1">+3 100 ₽ за рейс!</span>
+        <span class="pm-small">Можно вернуть прямо сейчас</span>
+        <span class="big num" id="pm-total">30 705 ₽</span>
+        <div class="pm-row" style="background: var(--pm-sky)"><span>Страховка по кредиту</span><b>16 000 ₽</b></div>
+        <div class="pm-row" style="background: var(--pm-mint)"><span>Двойное списание</span><b>7 990 ₽</b></div>
+        <div class="pm-row" style="background: var(--pm-pink)"><span>Рейс задержали на 4 ч</span><b>4 350 ₽</b></div>
+        <div class="pm-row" style="background: var(--pm-butter)"><span>Страховка к карте</span><b>1 946 ₽</b></div>
+        <div class="pm-row" style="background: var(--pm-lilac)"><span>Забытая подписка</span><b>419 ₽</b></div>
+        <span class="pm-sticker s2">претензию пишет ИИ</span>
+      </div>
+    </section>
+
+    <section class="pm-section">
+      <h2>Что мы возвращаем</h2>
+      <div class="pm-cards">
+        <div class="pm-card" style="background: #FFC8DD">
+          <div class="pm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3A1F4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 16l20-6-2-3-7 2-5-6H6l2 7-4 1-2-2"></path><path d="M3 21h18"></path></svg></div>
+          <h3>Задержки рейсов</h3><p>Штраф перевозчика, выплата по страховке к карте и расходы на еду в аэропорту.</p><span class="law">ВК РФ ст. 120 · ФАП-82</span>
+        </div>
+        <div class="pm-card" style="background: #DCCBFF">
+          <div class="pm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3A1F4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2"></rect><path d="M10 9l4 2-4 2z"></path></svg></div>
+          <h3>Подписки</h3><p>Пробный период незаметно стал платным? Вернём деньги за неиспользованный срок.</p><span class="law">ЗоЗПП ст. 32</span>
+        </div>
+        <div class="pm-card" style="background: #CFE6FF">
+          <div class="pm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3A1F4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg></div>
+          <h3>Страховки</h3><p>Досрочно закрыл кредит или передумал в первые 14 дней: часть премии твоя.</p><span class="law">353-ФЗ ст. 11 · Указание ЦБ 3854-У</span>
+        </div>
+        <div class="pm-card" style="background: #C9F2E1">
+          <div class="pm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3A1F4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="14" height="10" rx="2"></rect><path d="M7 3h14v10"></path></svg></div>
+          <h3>Двойные списания</h3><p>Заплатил дважды за одну покупку. Оспорим через банк и продавца.</p><span class="law">ГК РФ ст. 1102</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="pm-section">
+      <h2>От тебя нужна одна кнопка</h2>
+      <div class="pm-steps">
+        <div class="pm-step"><h3>Находим</h3><p>Сервис смотрит твои операции внутри банка и сверяет их с законами и условиями полисов.</p></div>
+        <div class="pm-step"><h3>Пишем</h3><p>ИИ готовит претензию со ссылками на статьи. Ты читаешь и жмёшь «Отправить».</p></div>
+        <div class="pm-step"><h3>Возвращаем</h3><p>Ведём переписку, напоминаем, эскалируем. Деньги приходят на карту.</p></div>
+      </div>
+    </section>
+
+    <section class="pm-section">
+      <h2>Почему это нужно</h2>
+      <div class="pm-facts">
+        <div class="pm-fact"><strong>59%</strong><span>рейсов в России вылетели вовремя в 2025 году</span><small>«АльфаСтрахование», «Коммерсантъ»</small></div>
+        <div class="pm-fact"><strong>28%</strong><span>людей признали, что потеряли контроль над тратами на подписки</span><small>опрос Business FM</small></div>
+        <div class="pm-fact"><strong>338 тыс.</strong><span>жалоб на финуслуги получил Банк России за 2024 год</span><small>Банк России</small></div>
+      </div>
+      <div class="pm-promise">
+        <span>Без твоего согласия ничего не отправляем</span>
+        <span>Данные не покидают банк</span>
+        <span>Комиссия только с успеха</span>
+      </div>
+    </section>
+
+    <section class="pm-final">
+      <h2>Посмотрим, сколько банк вернёт тебе?</h2>
+      <button class="pm-btn" type="button" data-go="client">Открыть демо</button>
+    </section>
+  </div>
+</div>
+
+<header class="band">
+  <div class="wrap">
+    <div class="brand">
+      <span class="eyebrow">Демо для хакатона FinTech Academy</span>
+      <h1>AI-Рекуператор</h1>
+      <p id="band-text">Загрузите выписку по карте. Сервис найдёт операции, по которым вам положен возврат или компенсация, и подготовит претензию.</p>
+      <div class="viewnav" role="tablist" aria-label="Режим">
+        <button type="button" role="tab" id="tab-home" aria-selected="false" aria-controls="view-home">Главная</button>
+        <button type="button" role="tab" id="tab-client" aria-selected="true" aria-controls="view-client">Клиент</button>
+        <button type="button" role="tab" id="tab-bank" aria-selected="false" aria-controls="view-bank">Банк</button>
+      </div>
+    </div>
+    <div class="totals" id="client-totals">
+      <div class="total"><span>Можно вернуть</span><strong class="num" id="t-total">0 ₽</strong><small id="t-count">случаев не найдено</small></div>
+      <div class="total"><span>Вам на счёт после комиссии 20%</span><strong class="num" id="t-net">0 ₽</strong><small>комиссия только с успеха</small></div>
+    </div>
+  </div>
+</header>
+
+<main>
+ <div id="view-client" role="tabpanel" aria-labelledby="tab-client">
+  <section class="wrap source" aria-label="Источник данных">
+    <div class="source-info">
+      <b id="src-name">Демо-выписка клиента</b>
+      <span id="src-meta">Пример данных, не реальный клиент</span>
+    </div>
+    <div class="actions">
+      <label class="btn" for="file">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="M7 9l5-5 5 5"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>
+        Загрузить CSV
+      </label>
+      <input type="file" id="file" accept=".csv,text/csv,text/plain">
+      <button class="btn" id="btn-demo" type="button">Демо-выписка</button>
+      <button class="btn ai" id="btn-ai" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"></path></svg>
+        Доп. проверка ИИ
+      </button>
+    </div>
+  </section>
+  <div class="wrap">
+    <p class="note" id="src-note">Формат CSV: <span class="fmt">дата;описание;сумма;категория;детали</span>. Сумма списания положительная, поступления отрицательная. Для рейсов в деталях: <span class="fmt">рейс NW1234, 12.10.2026, задержка 4.3 ч</span>.</p>
+    <p class="error" id="src-error" hidden></p>
+  </div>
+
+  <div class="wrap main">
+    <section aria-labelledby="cases-title">
+      <div class="col-title" id="cases-title">Найденные случаи</div>
+      <div class="cases" id="cases"></div>
+    </section>
+    <section class="panel" id="panel" aria-live="polite"></section>
+  </div>
+
+  <section class="wrap" aria-label="Как это работает">
+    <div class="steps">
+      <div class="step"><b>1. Анализ операций</b>Правила видят билеты, подписки, страховки и двойные списания.</div>
+      <div class="step"><b>2. Проверка по закону</b>ЗоЗПП, Воздушный кодекс, ФАП-82, 353-ФЗ, Указание ЦБ 3854-У.</div>
+      <div class="step"><b>3. Претензия от ИИ</b>Готовый текст по нормам, с данными операции.</div>
+      <div class="step"><b>4. Согласие и отправка</b>Одна кнопка, дальше сервис ведёт дело сам.</div>
+    </div>
+  </section>
+
+  <section class="wrap statement" aria-labelledby="st-title">
+    <div class="statement-head">
+      <h2 id="st-title">Выписка</h2>
+      <span class="status" id="st-meta"></span>
+    </div>
+    <div class="table-box">
+      <table class="tx">
+        <thead><tr><th>Дата</th><th>Описание</th><th>Категория</th><th>Детали</th><th style="text-align:right">Сумма</th></tr></thead>
+        <tbody id="tx-body"></tbody>
+      </table>
+    </div>
+  </section>
+ </div>
+
+ <div id="view-bank" role="tabpanel" aria-labelledby="tab-bank" hidden>
+  <section class="wrap dash">
+    <div class="dash-head">
+      <h2>Дашборд банка</h2>
+      <span class="status" id="dash-period"></span>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="live" id="live-note">В клиентской части этой страницы пока не отправлено ни одной претензии.</div>
+    <div class="dash-grid">
+      <div class="card chart" id="chart-card">
+        <h3>Возвращено клиентам по месяцам</h3>
+        <p class="status">тыс. ₽, оранжевым текущий месяц</p>
+        <div id="chart"></div>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <div class="card">
+        <h3>Возвраты по сценариям</h3>
+        <p class="status">тыс. ₽ за пилот</p>
+        <div class="hbars" id="scen"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Рейтинг мерчантов по числу нарушений</h3>
+      <p class="status">Где клиентам чаще всего положен возврат. Основа для переговоров с мерчантами и API-интеграций.</p>
+      <div class="table-box" style="border: none">
+        <table class="merch">
+          <thead><tr><th>#</th><th>Мерчант</th><th>Частое нарушение</th><th class="n">Дел</th><th class="n">Успех</th><th class="n">Ответ, дней</th><th class="n">Возвращено</th></tr></thead>
+          <tbody id="merch"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+ </div>
+</main>
+<footer class="wrap">Прототип. Суммы рассчитаны по упрощённым правилам и требуют проверки. Выписка обрабатывается сервером сервиса и не сохраняется. В Claude API данные уходят только по кнопкам «Доп. проверка ИИ» и «Сгенерировать претензию».</footer>
+</body>
+</html>

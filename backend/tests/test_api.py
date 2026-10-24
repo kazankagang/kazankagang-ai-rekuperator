@@ -9,7 +9,9 @@ client = TestClient(app)
 def test_demo_and_frontend():
     res = client.get("/api/demo")
     assert res.status_code == 200
-    assert len(res.json()["cases"]) == 5
+    cases = res.json()["cases"]
+    assert len([c for c in cases if not c["ml"]]) == 5
+    assert all(c["chance_source"] == "ml" for c in cases)
     assert "AI-Рекуператор" in client.get("/").text
 
 

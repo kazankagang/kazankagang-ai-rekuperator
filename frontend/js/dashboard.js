@@ -79,6 +79,36 @@ function renderLive() {
     : "В клиентской части пока не отправлено ни одной претензии. Отправьте одну, и она появится здесь.";
 }
 
+const CLASS_LABELS = {
+  dup: "Двойное списание", sub: "Подписка после пробного", imposed: "Навязанная услуга",
+  flight: "Задержка рейса", loanins: "Страховка по кредиту", cool: "Период охлаждения",
+};
+const pct = (x) => `${Math.round(x * 100)}%`;
+const dec = (x) => x.toFixed(2).replace(".", ",");
+
+async function renderMl() {
+  let info;
+  try {
+    info = await api.mlInfo();
+  } catch (e) {
+    $("ml-note").textContent = `Метрики недоступны: ${e.message}`;
+    return;
+  }
+  const { scanner, scorer } = info.metrics;
+  $("ml-note").textContent = `Обучены на синтетических данных: ${thousands(scanner.train_transactions)} операций и ${thousands(scorer.train_cases)} исторических дел. Метрики на отложенной выборке. В пилоте модели переобучаются на исходах реальных дел.`;
+  const tiles = [
+    ["Сканер: точность", pct(scanner.precision), "доля верных находок"],
+    ["Сканер: полнота", pct(scanner.recall), "доля найденных поводов"],
+    ["Скоринг: ROC AUC", dec(scorer.auc), `экспертные веса: ${dec(scorer.auc_expert)}`],
+    ["Скоринг: Brier", dec(scorer.brier), `экспертные веса: ${dec(scorer.brier_expert)}, меньше лучше`],
+  ];
+  $("ml-kpis").innerHTML = tiles.map(([label, value, note]) =>
+    `<div class="kpi"><span>${esc(label)}</span><strong class="num">${esc(value)}</strong><small>${esc(note)}</small></div>`).join("");
+  $("ml-classes").innerHTML = Object.entries(scanner.per_class).map(([k, m]) => `
+    <tr><td><b>${esc(CLASS_LABELS[k] || k)}</b></td><td class="n">${pct(m.precision)}</td><td class="n">${pct(m.recall)}</td>
+    <td class="n">${dec(m.f1)}</td><td class="n">${thousands(m.support)}</td></tr>`).join("");
+}
+
 export async function showDashboard() {
   renderLive();
   if (data) return;
@@ -93,4 +123,5 @@ export async function showDashboard() {
   renderChart(data.monthly);
   renderScenarios(data.scenarios);
   renderMerchants(data.merchants);
+  renderMl();
 }

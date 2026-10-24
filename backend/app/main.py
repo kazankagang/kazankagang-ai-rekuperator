@@ -3,6 +3,7 @@
 Запуск из корня репозитория:
     uvicorn backend.app.main:app --reload
 """
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import anthropic
@@ -11,7 +12,10 @@ from fastapi.staticfiles import StaticFiles
 
 from . import dashboard, llm
 from .claims import template_claim
-from .models import AnalysisResult, ClaimRequest, ClaimResponse, ScanRequest, ScanResponse
+from .ml import model as ml_model
+from .ml import service as ml
+from .models import (AnalysisResult, ClaimRequest, ClaimResponse, ScanRequest, ScanResponse, ScoreRequest,
+                     ScoreResponse)
 from .rules import detect
 from .statement import StatementError, parse_csv
 
@@ -20,7 +24,15 @@ DEMO_CSV = ROOT / "data" / "demo_statement.csv"
 FRONTEND = ROOT / "frontend"
 MAX_UPLOAD = 2 * 1024 * 1024
 
-app = FastAPI(title="AI-Рекуператор", version="0.2.0")
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    ml_model.get()  # загрузить модели, а при первом запуске обучить (несколько секунд)
+    yield
+
+
+app = FastAPI(title="AI-Рекуператор", version="0.3.0", lifespan=lifespan)
 
 
 def _analyze(text: str, source: str) -> AnalysisResult:
@@ -28,7 +40,7 @@ def _analyze(text: str, source: str) -> AnalysisResult:
         txs = parse_csv(text)
     except StatementError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e
-    return AnalysisResult(source=source, transactions=txs, cases=detect(txs))
+    return AnalysisResult(source=source, transactions=txs, cases=ml.enrich(txs, detect(txs)))
 
 
 @app.get("/api/health")
@@ -71,11 +83,22 @@ def ai_scan(req: ScanRequest) -> ScanResponse:
     if not llm.ai_enabled():
         raise HTTPException(status_code=503, detail="Доп. проверка ИИ недоступна: не задан ключ Claude API.")
     try:
-        return ScanResponse(cases=llm.scan_statement(req.transactions, req.cases))
+        found = llm.scan_statement(req.transactions, req.cases)
+        return ScanResponse(cases=ml.score_cases(found, req.transactions))
     except anthropic.RateLimitError as e:
         raise HTTPException(status_code=429, detail="Слишком много запросов к ИИ. Попробуйте через минуту.") from e
     except (anthropic.APIError, RuntimeError) as e:
         raise HTTPException(status_code=502, detail=f"ИИ не ответил: {e}") from e
+
+
+@app.post("/api/ml/score", response_model=ScoreResponse)
+def ml_score(req: ScoreRequest) -> ScoreResponse:
+    return ScoreResponse(cases=ml.score_cases(req.cases, req.transactions))
+
+
+@app.get("/api/ml/info")
+def ml_info() -> dict:
+    return ml.info()
 
 
 @app.get("/api/dashboard")

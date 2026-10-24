@@ -23,6 +23,7 @@ function showError(msg) {
   const el = $("src-error");
   el.textContent = msg;
   el.hidden = !msg;
+  if (msg) el.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function renderTotals() {
@@ -222,7 +223,7 @@ function initServer(serverError) {
   const note = $("conn-note");
   if (conn.offline) {
     note.textContent = (serverError ? `${serverError} ` : "") +
-      "Офлайн-режим: демо-выписка и претензии встроены в приложение. Чтобы загрузить свою выписку и включить ИИ, нажмите «Сервер».";
+      "Офлайн-режим: выписка разбирается прямо на телефоне, претензии собираются по шаблону. Чтобы включить ИИ, нажмите «Сервер».";
   } else {
     note.textContent = `Подключено к серверу ${conn.base}.`;
   }
@@ -240,6 +241,8 @@ export async function initClient() {
       showError(e.message);
     }
   });
+  // В Android-приложении фильтр по типу прячет CSV, которые пришли из мессенджеров без MIME-типа.
+  if (conn.native) $("file").removeAttribute("accept");
   $("btn-demo").addEventListener("click", loadDemo);
   $("btn-ai").addEventListener("click", aiScan);
 

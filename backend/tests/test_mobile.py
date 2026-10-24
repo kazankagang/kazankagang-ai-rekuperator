@@ -15,11 +15,9 @@ def load_build_www():
     return mod
 
 
-def test_offline_data_covers_demo_cases():
+def test_offline_data_has_demo_and_dashboard():
     data = load_build_www().offline_data()
-    ids = {c["id"] for c in data["demo"]["cases"]}
-    assert ids and ids == set(data["claims"])
-    assert all("ПРЕТЕНЗИЯ" in c["text"] for c in data["claims"].values())
+    assert len(data["demo"]["cases"]) == 5
     assert data["dashboard"]["kpis"]
 
 

@@ -2,7 +2,9 @@
 //
 // В браузере API живёт на том же адресе, что и страница. В Android-приложении
 // (Capacitor) адрес сервера задаёт пользователь, а без сервера приложение
-// работает офлайн на встроенных демо-данных из data/offline.json.
+// работает офлайн: демо-выписка и дашборд берутся из data/offline.json, а свою
+// выписку разбирает офлайн-движок offline.js прямо на телефоне.
+import * as engine from "./offline.js";
 
 const SERVER_KEY = "rekuperator.server";
 
@@ -18,7 +20,7 @@ export const conn = {
   offline: native,  // в приложении офлайн, пока сервер не ответил на /api/health
 };
 
-const NEED_SERVER = "Без сервера доступна только демо-выписка. Нажмите «Сервер» и укажите адрес бэкенда.";
+const NEED_SERVER = "Доп. проверка ИИ работает только с сервером. Нажмите «Сервер» и укажите адрес бэкенда.";
 
 export function setServer(url) {
   const clean = url.trim().replace(/\/+$/, "");
@@ -59,6 +61,12 @@ async function call(path, options, fromOffline) {
   return fromOffline(await offline());
 }
 
+// Как на сервере: UTF-8, а если не читается, то Windows-1251 (выгрузки из Excel).
+async function readText(file) {
+  const buf = await file.arrayBuffer();
+  try { return new TextDecoder("utf-8", { fatal: true }).decode(buf); } catch { return new TextDecoder("windows-1251").decode(buf); }
+}
+
 const jsonBody = (data) => ({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
 
 export const api = {
@@ -70,12 +78,18 @@ export const api = {
   },
   demo: () => call("/api/demo", {}, (d) => d.demo),
   analyze: (file) => {
+    if (conn.offline) return readText(file).then((text) => engine.analyze(text, file.name || "upload.csv"));
     const form = new FormData();
     form.append("file", file);
-    return call("/api/analyze", { method: "POST", body: form });
+    return request("/api/analyze", { method: "POST", body: form });
   },
-  claim: (caseData, transactions) => call("/api/claim", jsonBody({ case: caseData, transactions }),
-    (d) => d.claims[caseData.id] || Promise.reject(new Error(NEED_SERVER))),
+  claim: (caseData, transactions) => {
+    if (conn.offline) {
+      return Promise.resolve({ text: engine.templateClaim(caseData, transactions), source: "template",
+        note: "Офлайн-режим: претензия собрана по шаблону." });
+    }
+    return request("/api/claim", jsonBody({ case: caseData, transactions }));
+  },
   aiScan: (transactions, cases) => call("/api/ai-scan", jsonBody({ transactions, cases })),
   dashboard: () => call("/api/dashboard", {}, (d) => d.dashboard),
 };

@@ -1,0 +1,78 @@
+/* Landing: "pick me" pastel look, its own token set */
+:root {
+  --pm-bg: #FFF4F8; --pm-card: #FFFFFF; --pm-ink: #3A1F4D; --pm-muted: #6E5A80;
+  --pm-pink: #FFC8DD; --pm-pink-deep: #D6336C; --pm-lilac: #DCCBFF; --pm-mint: #C9F2E1; --pm-butter: #FFF0B3; --pm-sky: #CFE6FF;
+  --pm-btn: #3A1F4D; --pm-btn-fg: #FFF4F8; --pm-line: #F2D7E5;
+  --pm-display: Unbounded, Rubik, "Segoe UI", sans-serif; --pm-body: Nunito, "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --pm-bg: #1E1228; --pm-card: #2A1B38; --pm-ink: #FCE7F3; --pm-muted: #CDB6DD;
+  --pm-pink: #6B2A4E; --pm-pink-deep: #FF8FB8; --pm-lilac: #45306E; --pm-mint: #1F4A3E; --pm-butter: #4D4120; --pm-sky: #213D5C;
+  --pm-btn: #FF8FB8; --pm-btn-fg: #1E1228; --pm-line: #3E2A50 } }
+:root[data-theme="dark"] {
+  --pm-bg: #1E1228; --pm-card: #2A1B38; --pm-ink: #FCE7F3; --pm-muted: #CDB6DD;
+  --pm-pink: #6B2A4E; --pm-pink-deep: #FF8FB8; --pm-lilac: #45306E; --pm-mint: #1F4A3E; --pm-butter: #4D4120; --pm-sky: #213D5C;
+  --pm-btn: #FF8FB8; --pm-btn-fg: #1E1228; --pm-line: #3E2A50 }
+body.home { background: var(--pm-bg) }
+#view-home { background: var(--pm-bg); color: var(--pm-ink); font-family: var(--pm-body); font-size: 16px; overflow: hidden }
+#view-home h1, #view-home h2, #view-home h3 { font-family: var(--pm-display); color: var(--pm-ink) }
+.pm-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-block: 20px }
+.pm-logo { font-family: var(--pm-display); font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px }
+.pm-logo i { width: 30px; height: 30px; border-radius: 10px 10px 10px 4px; background: var(--pm-pink-deep); display: inline-block; transform: rotate(-8deg) }
+.pm-links { display: flex; gap: 8px; flex-wrap: wrap }
+.pm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 2px solid var(--pm-ink); background: var(--pm-card); color: var(--pm-ink); font-family: var(--pm-body); font-weight: 800; font-size: 15px; box-shadow: 3px 3px 0 var(--pm-ink); transition: transform .15s, box-shadow .15s }
+.pm-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--pm-ink) }
+.pm-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--pm-ink) }
+.pm-btn.main { background: var(--pm-btn); color: var(--pm-btn-fg); border-color: var(--pm-btn); box-shadow: 3px 3px 0 var(--pm-pink-deep) }
+.pm-btn.small { min-height: 40px; padding: 0 16px; font-size: 14px; box-shadow: 2px 2px 0 var(--pm-ink) }
+.pm-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; align-items: center; padding-block: 24px 56px; position: relative }
+@media (max-width: 860px) { .pm-hero { grid-template-columns: minmax(0, 1fr) } }
+.pm-hero::before, .pm-hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(40px); z-index: 0; pointer-events: none }
+.pm-hero::before { width: 360px; height: 360px; background: var(--pm-pink); top: -60px; left: -120px; opacity: .8 }
+.pm-hero::after { width: 320px; height: 320px; background: var(--pm-lilac); bottom: -40px; right: -80px; opacity: .8 }
+.pm-hero > * { position: relative; z-index: 1; min-width: 0 }
+.pm-copy { display: flex; flex-direction: column; gap: 20px; align-items: flex-start }
+.pm-tag { font-weight: 800; font-size: 14px; background: var(--pm-butter); border: 2px solid var(--pm-ink); border-radius: 999px; padding: 6px 14px; transform: rotate(-2deg) }
+.pm-copy h1 { font-size: clamp(32px, 5.4vw, 60px); font-weight: 800; line-height: 1.05; letter-spacing: -1px }
+.pm-copy h1 mark { background: var(--pm-pink); color: inherit; border-radius: 16px; padding: 0 10px; box-decoration-break: clone; -webkit-box-decoration-break: clone }
+.pm-copy p { margin: 0; font-size: 18px; color: var(--pm-muted); max-width: 46ch }
+.pm-cta { display: flex; gap: 12px; flex-wrap: wrap }
+.pm-small { font-size: 14px; color: var(--pm-muted) }
+.pm-phone { position: relative; justify-self: center; width: min(340px, 100%); background: var(--pm-card); border: 2px solid var(--pm-ink); border-radius: 36px; padding: 22px 18px; box-shadow: 8px 8px 0 var(--pm-lilac); display: flex; flex-direction: column; gap: 12px; animation: pm-float 6s ease-in-out infinite }
+@keyframes pm-float { 50% { transform: translateY(-8px) rotate(-1deg) } }
+.pm-phone .big { font-family: var(--pm-display); font-weight: 800; font-size: 34px; line-height: 1 }
+.pm-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px; font-weight: 700; font-size: 14px; color: var(--pm-ink) }
+.pm-row b { font-family: var(--pm-display); font-size: 15px; white-space: nowrap }
+.pm-sticker { position: absolute; font-family: var(--pm-display); font-weight: 700; font-size: 13px; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--pm-ink); background: var(--pm-butter); color: var(--pm-ink); white-space: nowrap; box-shadow: 2px 2px 0 var(--pm-ink) }
+.pm-sticker.s1 { top: -18px; right: -10px; transform: rotate(8deg) }
+.pm-sticker.s2 { bottom: -20px; left: -30px; transform: rotate(-7deg); background: var(--pm-mint) }
+@media (max-width: 480px) { .pm-sticker.s2 { left: -6px } .pm-sticker.s1 { right: 0 } }
+.pm-section { padding-block: 40px; display: flex; flex-direction: column; gap: 24px }
+.pm-section > h2 { font-size: clamp(24px, 3.4vw, 36px); font-weight: 800; text-wrap: balance }
+.pm-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px }
+.pm-card { border: 2px solid var(--pm-ink); border-radius: 26px; padding: 20px; display: flex; flex-direction: column; gap: 10px; color: #3A1F4D }
+.pm-card:nth-child(odd) { transform: rotate(-.8deg) } .pm-card:nth-child(even) { transform: rotate(.8deg) }
+.pm-card h3 { font-size: 17px; font-weight: 700; color: #3A1F4D !important }
+.pm-card p { margin: 0; font-size: 14px; line-height: 1.5 }
+.pm-card .law { font-size: 12px; font-weight: 800; opacity: .75 }
+.pm-ico { width: 46px; height: 46px; border-radius: 16px; background: rgba(255,255,255,.7); border: 2px solid #3A1F4D; display: flex; align-items: center; justify-content: center }
+.pm-ico svg { width: 24px; height: 24px }
+.pm-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: s }
+@media (max-width: 760px) { .pm-steps { grid-template-columns: minmax(0, 1fr) } }
+.pm-step { background: var(--pm-card); border: 2px dashed var(--pm-pink-deep); border-radius: 26px; padding: 22px; display: flex; flex-direction: column; gap: 8px }
+.pm-step::before { counter-increment: s; content: counter(s); font-family: var(--pm-display); font-weight: 800; font-size: 20px; width: 44px; height: 44px; border-radius: 50%; background: var(--pm-pink-deep); color: var(--pm-bg); display: flex; align-items: center; justify-content: center }
+.pm-step h3 { font-size: 17px }
+.pm-step p { margin: 0; color: var(--pm-muted); font-size: 15px }
+.pm-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px }
+@media (max-width: 760px) { .pm-facts { grid-template-columns: minmax(0, 1fr) } }
+.pm-fact { background: var(--pm-card); border-radius: 26px; border: 2px solid var(--pm-line); padding: 22px; display: flex; flex-direction: column; gap: 6px }
+.pm-fact strong { font-family: var(--pm-display); font-size: 40px; font-weight: 800; color: var(--pm-pink-deep); line-height: 1 }
+.pm-fact span { font-size: 15px }
+.pm-fact small { font-size: 12px; color: var(--pm-muted) }
+.pm-promise { display: flex; flex-wrap: wrap; gap: 10px }
+.pm-promise span { background: var(--pm-card); border: 2px solid var(--pm-ink); border-radius: 999px; padding: 10px 16px; font-weight: 800; font-size: 14px }
+.pm-final { background: var(--pm-btn); color: var(--pm-btn-fg); border-radius: 36px; padding: 36px 28px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; margin-block: 24px 48px }
+.pm-final h2 { color: var(--pm-btn-fg) !important; font-size: clamp(22px, 3vw, 32px); font-weight: 800; max-width: 22ch }
+.pm-final .pm-btn { background: #FFF0B3; color: #3A1F4D; border-color: #FFF0B3; box-shadow: 3px 3px 0 var(--pm-pink-deep) }
+@media (prefers-reduced-motion: reduce) { .pm-phone { animation: none } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }

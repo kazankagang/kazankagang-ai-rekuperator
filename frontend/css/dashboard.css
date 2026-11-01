@@ -1,0 +1,44 @@
+/* View switch */
+.viewnav { display: flex; gap: 4px; background: var(--band-line); padding: 4px; border-radius: 14px; width: max-content; max-width: 100% }
+.viewnav button { min-height: 40px; padding: 0 16px; border-radius: 10px; border: none; background: transparent; color: var(--band-muted); font-family: var(--display); font-weight: 600; font-size: 14px }
+.viewnav button[aria-selected="true"] { background: var(--band-fg); color: #14213D }
+
+/* Bank dashboard */
+.dash { display: flex; flex-direction: column; gap: 20px; padding-block: 24px 48px }
+.dash-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline }
+.dash-head h2 { font-size: 24px }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px }
+@media (max-width: 860px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0 }
+.kpi span { font-size: 13px; color: var(--muted) }
+.kpi strong { font-family: var(--display); font-size: clamp(22px, 3vw, 30px); color: var(--ink); font-weight: 700 }
+.kpi small { font-size: 12px; color: var(--good); font-weight: 600 }
+.dash-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px }
+@media (max-width: 860px) { .dash-grid { grid-template-columns: minmax(0, 1fr) } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0; position: relative }
+.card h3 { font-size: 16px; font-weight: 600 }
+.card .status { margin-top: -6px }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible }
+.chart .grid { stroke: var(--line-soft); stroke-width: 1 }
+.chart .axis { fill: var(--muted); font-size: 12px; font-family: var(--body) }
+.chart .val { fill: var(--fg); font-size: 12px; font-weight: 600; font-family: var(--body) }
+.chart .bar { fill: var(--ink) }
+.chart .bar.now { fill: var(--accent) }
+.chart .hit { fill: transparent; cursor: default }
+.chart .hit:hover + .bar, .chart g:hover .bar { opacity: .85 }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; transform: translate(-50%, -110%) }
+.hbars { display: flex; flex-direction: column; gap: 10px }
+.hbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 13px }
+.hbar .track { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: var(--line-soft); overflow: hidden }
+.hbar .track div { height: 100%; border-radius: 5px; background: var(--ink) }
+.hbar b { font-weight: 600; font-variant-numeric: tabular-nums }
+table.merch { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px }
+table.merch th { text-align: left; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--line) }
+table.merch td { padding: 10px; border-bottom: 1px solid var(--line-soft); vertical-align: middle }
+table.merch tr:last-child td { border-bottom: none }
+table.merch td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap }
+table.merch th.n { text-align: right }
+.rank { font-family: var(--display); font-weight: 700; color: var(--muted) }
+.mini { display: inline-block; width: 64px; height: 6px; border-radius: 3px; background: var(--line-soft); vertical-align: middle; margin-left: 8px; overflow: hidden }
+.mini i { display: block; height: 100%; background: var(--good); border-radius: 3px }
+.live { background: var(--accent-soft); color: var(--fg); border-radius: 14px; padding: 12px 16px; font-size: 14px }

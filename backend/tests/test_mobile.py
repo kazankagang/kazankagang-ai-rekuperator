@@ -17,7 +17,10 @@ def load_build_www():
 
 def test_offline_data_has_demo_and_dashboard():
     data = load_build_www().offline_data()
-    assert len(data["demo"]["cases"]) == 5
+    cases = data["demo"]["cases"]
+    assert sum(not c["ml"] for c in cases) == 5  # правила
+    assert sum(c["ml"] for c in cases) == 2  # находки ML-сканера
+    assert data["ml_info"]["metrics"]["scorer"]
     assert data["dashboard"]["kpis"]
 
 

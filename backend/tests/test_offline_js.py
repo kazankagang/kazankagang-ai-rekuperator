@@ -32,7 +32,9 @@ def test_js_engine_matches_backend(path):
     txs = parse_csv(path.read_text(encoding="utf-8"))
     cases = detect(txs)
     assert js["transactions"] == [t.model_dump(mode="json") for t in txs]
-    assert js["cases"] == [c.model_dump(mode="json") for c in cases]
+    # Поля ML (скоринг, факторы) заполняет только сервер; офлайн-движок считает правила.
+    ml_fields = {"ml", "chance_source", "expert_chance", "factors", "confidence"}
+    assert js["cases"] == [c.model_dump(mode="json", exclude=ml_fields) for c in cases]
     by_id = {t.id: t for t in txs}
     assert js["claims"] == [template_claim(c, [by_id[i] for i in c.evidence]) for c in cases]
 

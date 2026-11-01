@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 
 from backend.app import dashboard  # noqa: E402
 from backend.app.main import demo  # noqa: E402
+from backend.app.ml import service as ml  # noqa: E402
 
 WWW = ROOT / "mobile" / "www"
 
@@ -25,6 +26,7 @@ def offline_data() -> dict:
     return {
         "demo": demo().model_dump(mode="json"),
         "dashboard": dashboard.build(),
+        "ml_info": ml.info(),
     }
 
 

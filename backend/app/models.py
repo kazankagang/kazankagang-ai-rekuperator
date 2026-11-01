@@ -18,6 +18,12 @@ class ClaimPart(BaseModel):
     sum: float
 
 
+class Factor(BaseModel):
+    """Что повлияло на шанс успеха: подпись и вклад в процентных пунктах."""
+    label: str
+    impact: int
+
+
 class CaseOut(BaseModel):
     """Найденный случай: что вернуть, сколько, на каком основании и кому писать."""
     id: str
@@ -32,6 +38,11 @@ class CaseOut(BaseModel):
     deadline: str = ""
     ai: bool = False
     amount: float = 0
+    ml: bool = False  # найден ML-сканером, а не правилом
+    confidence: float = 0  # уверенность сканера, 0..1
+    chance_source: str = "expert"  # "expert" (вес по типу дела) или "ml" (модель скоринга)
+    expert_chance: int = 0
+    factors: list[Factor] = []
 
 
 class AnalysisResult(BaseModel):
@@ -57,4 +68,13 @@ class ScanRequest(BaseModel):
 
 
 class ScanResponse(BaseModel):
+    cases: list[CaseOut]
+
+
+class ScoreRequest(BaseModel):
+    cases: list[CaseOut]
+    transactions: list[Transaction] = []
+
+
+class ScoreResponse(BaseModel):
     cases: list[CaseOut]

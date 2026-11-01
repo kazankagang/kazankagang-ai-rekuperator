@@ -25,4 +25,5 @@ export const api = {
   claim: (caseData, transactions) => postJson("/api/claim", { case: caseData, transactions }),
   aiScan: (transactions, cases) => postJson("/api/ai-scan", { transactions, cases }),
   dashboard: () => request("/api/dashboard"),
+  mlInfo: () => request("/api/ml/info"),
 };

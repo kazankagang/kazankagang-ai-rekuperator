@@ -1,0 +1,20 @@
+{
+  "name": "rekuperator-mobile",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Android-приложение AI-Рекуператора на Capacitor",
+  "scripts": {
+    "build": "python scripts/build_www.py",
+    "android:add": "cap add android",
+    "android:icons": "capacitor-assets generate --android",
+    "android:sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.3"
+  }
+}

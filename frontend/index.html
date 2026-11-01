@@ -135,10 +135,12 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"></path></svg>
         Доп. проверка ИИ
       </button>
+      <button class="btn" id="btn-server" type="button" hidden>Сервер</button>
     </div>
   </section>
   <div class="wrap">
     <p class="note" id="src-note">Формат CSV: <span class="fmt">дата;описание;сумма;категория;детали</span>. Сумма списания положительная, поступления отрицательная. Для рейсов в деталях: <span class="fmt">рейс NW1234, 12.10.2026, задержка 4.3 ч</span>.</p>
+    <p class="note" id="conn-note" hidden></p>
     <p class="error" id="src-error" hidden></p>
   </div>
 

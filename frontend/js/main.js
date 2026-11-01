@@ -30,11 +30,20 @@ function showView(view) {
   if (bank) showDashboard();
 }
 
-$("tab-home").addEventListener("click", () => showView("home"));
-$("tab-client").addEventListener("click", () => showView("client"));
-$("tab-bank").addEventListener("click", () => showView("bank"));
-document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => showView(b.dataset.go)));
+const viewFromHash = () => ({ "#client": "client", "#bank": "bank" }[location.hash] || "home");
 
-const initial = { "#client": "client", "#bank": "bank" }[location.hash] || "home";
-showView(initial);
+// Каждый переход пишется в историю, чтобы «Назад» на Android возвращал на прошлый экран.
+function go(view) {
+  if (view === viewFromHash()) return;
+  history.pushState(null, "", view === "home" ? location.pathname + location.search : `#${view}`);
+  showView(view);
+}
+
+$("tab-home").addEventListener("click", () => go("home"));
+$("tab-client").addEventListener("click", () => go("client"));
+$("tab-bank").addEventListener("click", () => go("bank"));
+document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => go(b.dataset.go)));
+window.addEventListener("popstate", () => showView(viewFromHash()));
+
+showView(viewFromHash());
 initClient();

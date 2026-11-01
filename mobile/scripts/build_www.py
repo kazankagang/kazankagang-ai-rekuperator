@@ -1,7 +1,8 @@
 """Собирает веб-часть Android-приложения в mobile/www.
 
-Копирует frontend/ и кладёт рядом data/offline.json: демо-выписку, дашборд и
-претензии по шаблону, чтобы приложение работало без сервера.
+Копирует frontend/ и кладёт рядом data/offline.json: демо-выписку и дашборд,
+чтобы приложение работало без сервера. Свою выписку и претензии без сервера
+собирает frontend/js/offline.js.
 
 Запуск из корня репозитория или из mobile/:
     python mobile/scripts/build_www.py
@@ -15,27 +16,15 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from backend.app import dashboard  # noqa: E402
-from backend.app.claims import template_claim  # noqa: E402
 from backend.app.main import demo  # noqa: E402
 
 WWW = ROOT / "mobile" / "www"
 
 
 def offline_data() -> dict:
-    result = demo()
-    txs = {t.id: t for t in result.transactions}
-    claims = {
-        c.id: {
-            "text": template_claim(c, [txs[i] for i in c.evidence if i in txs]),
-            "source": "template",
-            "note": "Офлайн-режим: претензия собрана по шаблону.",
-        }
-        for c in result.cases
-    }
     return {
-        "demo": result.model_dump(mode="json"),
+        "demo": demo().model_dump(mode="json"),
         "dashboard": dashboard.build(),
-        "claims": claims,
     }
 
 
